@@ -5,8 +5,8 @@
 	<link rel="icon" href="favicon.ico" type="image/png">
 	<title>Wrapper 3</title>
 	<meta name="description" content="real wrapper 3">
-	<link rel="stylesheet" type="text/css" href="../css/global.css">
-	<link rel="stylesheet" type="text/css" href="../css/modern-normalize.css">
+	<link rel="stylesheet" type="text/css" href="/pages/css/global.css">
+	<link rel="stylesheet" type="text/css" href="/pages/css/modern-normalize.css">
 </head>
 <body>
 
@@ -33,7 +33,7 @@
 				<a href="https://youtu.be/dQw4w9WgXcQ">Chibi Ninjas</a>
 			</nav>
 		</div>
-		<a href="https://youtu.be/dQw4w9WgXcQ" class="button_big">MAKE A VIDEO</a>
+		<a href="/go_full?tray=retro" class="button_big">MAKE A VIDEO</a>
 	</nav>
 </header>
 
@@ -41,3 +41,74 @@
 <h1>Welcome to Wrapper 3!</h1>
 <h2>What's Wrapper 3?</h2>
 <p>Wrapper 3 is a new GoAnimate Wrapper site. It's just like Wrapper 2, but not cancelled! Go click the buttons above and play around with the new, redesigned video maker! (it has a dark mode too :))</p>
+	<table>
+		<thead>
+			<tr>
+				<td></td>
+				<td>Video Title</td>
+				<td>Last Modified</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody></tbody>
+		<tfoot>
+			<tr>
+				<td colspan="127"><a id="load_more" href="javascript:;">LOAD MORE...</a></td>
+			</tr>
+		</tfoot>
+	</table>
+</main>
+
+<footer>
+	<nav id="foot-left">
+		<a href="https://discord.io/goanimate4schools">GoAnimate4schools Remastered Discord</a>
+	</nav>
+</footer>
+
+
+
+</form>
+
+</body>
+
+<script>
+	const closeReq = new XMLHttpRequest();
+	closeReq.open('GET', '/events/close');
+	closeReq.send();
+
+	var json;
+	var tbody = document.getElementsByTagName('tbody')[0];
+	var loadMore = document.getElementById('load_more');
+	const listReq = new XMLHttpRequest();
+	listReq.open('GET', '/movieList');
+	listReq.send();
+
+	var C = 0;
+	function loadRows() {
+		let c = C; C += 69;
+		for (; c < C; c++) {
+			if (c > json.length - 1) {
+				loadMore.remove();
+				break;
+			}
+
+			const tbl = json[c];
+			const date = tbl.date.substr(0, 10) + ' ' + tbl.date.substr(11);
+			tbody.insertAdjacentHTML('beforeend',
+				'<tr><td><img src="/movie_thumbs/' + tbl.id + '"></td><td><div>' + tbl.title + '</div><div>' + tbl.durationString + '</div></div></td><td><span>' + date.match(/./g).join('</span><span>') + '</span></td><td><a href="javascript:;" onclick="popup(\'' + tbl.id + '\')"></a><a href="/go_full?movieId=' + tbl.id + '"></a><a href="/movies/' + tbl.id + '.xml" download="' + tbl.title + '"></a></td></tr>');
+		}
+	}
+
+	loadMore.onclick = loadRows;
+	listReq.onreadystatechange = function (e) {
+		if (listReq.readyState != 4) return;
+		json = JSON.parse(listReq.responseText);
+		loadRows();
+	}
+
+	function popup(id) {
+		window.open('/player?movieId=' + id, 'MsgWindow', 'width=1280,height=720,left=' + (screen.width / 2 - 640) + ',top=' + (screen.height / 2 - 360));
+	}
+</script>
+
+</html>
